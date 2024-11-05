@@ -1,0 +1,14 @@
+<div class="container">
+  <nav class="navbar">
+    <div #todo class="tab" id="todo" [class.selected]="todoSelected">
+      <a class="link" routerLink="/todo" (click)="updateSelection(todo)"
+        >To Do</a
+      >
+    </div>
+    <div #notes class="tab" id="notes" [class.selected]="notesSelected">
+      <a class="link" routerLink="/notes" (click)="updateSelection(notes)"
+        >Notes</a
+      >
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,22 @@
+.container {
+  background: #f7f3ea;
+}
+.navbar {
+  display: flex;
+  width: 50%;
+  margin: auto;
+  //   justify-content: center;
+  height: 100%;
+}
+.tab {
+  padding: 24px;
+}
+
+.link {
+  text-decoration: none;
+  color: #556bb5;
+}
+
+.selected {
+  background-color: white;
+}
