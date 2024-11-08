@@ -1,21 +1,70 @@
 <table>
   <thead>
     <tr>
-      <th class="checkmark-col"></th>
+      <th class="checkbox-col"></th>
       <th>Task</th>
-      <th>Date Added</th>
+      <th>Description</th>
       <th>Priority</th>
+      <th>Date Added</th>
       <th colspan="2">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let task of tasks">
-      <td><input type="checkbox" [checked]="task.completed" /></td>
+      <td class="checkbox-cell">
+        <input type="checkbox" [checked]="task.completed" />
+      </td>
       <td>{{ task.name }}</td>
-      <td>{{ task.dateAdded.toLocaleDateString() }}</td>
+      <td>{{ task.description }}</td>
       <td>{{ task.priority }}</td>
-      <td class="edit-cell"><button class="action-button">Edit</button></td>
-      <td class="remove-cell"><button class="action-button">Remove</button></td>
+      <td>{{ formatDate(task.dateAdded) }}</td>
+      <td class="edit-cell">
+        <button class="action-button">Edit</button>
+      </td>
+      <td class="remove-cell">
+        <button class="action-button" (click)="removeTask(task.id!)">
+          Remove
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="isAdding">
+      <td class="checkbox-cell"></td>
+      <td>
+        <input
+          class="input"
+          placeholder="Name"
+          [(ngModel)]="newTaskNameInputValue"
+          (ngModelChange)="handleTaskNameChange($event)"
+        />
+      </td>
+      <td>
+        <input
+          class="input"
+          placeholder="Description"
+          [(ngModel)]="newTaskDescriptionInputValue"
+          (ngModelChange)="handleTaskDescription($event)"
+        />
+      </td>
+      <td>
+        <select
+          [(ngModel)]="newTaskSelectedPriority"
+          (ngModelChange)="handleSelectedPriorityChange($event)"
+        >
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+        </select>
+      </td>
+      <td class="edit-cell" colspan="2">
+        <button class="action-button" (click)="confirmTaskAddition()">
+          Confirm
+        </button>
+      </td>
+      <td class="edit-cell">
+        <button class="action-button" (click)="cancelTaskAddition()">
+          Cancel
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -29,12 +29,27 @@ th {
 }
 
 td {
-  padding: 2px;
+  padding: 0px 6px 0px 6px;
 }
 
-.checkmark-col {
+.checkbox-col {
   width: 40px;
 }
+
+.checkbox-cell {
+  text-align: center;
+  padding: 0px 10px 0px 10px;
+}
+
+.input {
+  width: 100px;
+}
+
+// .completed-cell {
+//   //   padding-left: 15px;
+//   //   padding-right: 15px;
+//   width: 100px;
+// }
 
 .edit-cell,
 .remove-cell {

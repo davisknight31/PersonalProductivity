@@ -1,11 +1,42 @@
 <div class="container">
-  <div class="button-container"></div>
+  <div *ngIf="loggedInUser">{{ loggedInUser.firstName }}</div>
+  Current To DO
   <div class="daily-todo">
-    <app-task-list [tasks]="tasks"></app-task-list>
+    <app-task-list
+      [tasks]="dailyTasks"
+      [isAdding]="isAddingDailyTask"
+      (newTaskNameEmitter)="setNewTaskName($event)"
+      (newTaskDescriptionEmitter)="setNewTaskDescription($event)"
+      (newTaskPriorityEmitter)="setNewTaskPriority($event)"
+      (submitTaskCreation)="createTask(false)"
+      (cancelTaskCreation)="cancelTask()"
+      (removeTaskEmitter)="deleteTask($event)"
+    ></app-task-list>
     <div class="button-container">
-      <app-button label="Add an item" (clicked)="addTask()"></app-button>
+      <app-button
+        label="Add an item"
+        (clicked)="addDailyTask()"
+        [isDisabled]="areButtonsDisabled"
+      ></app-button>
     </div>
-    <button (click)="addTask()"></button>
   </div>
-  <app-task-list></app-task-list>
+  Back Log
+  <div class="task-backlog">
+    <app-task-list
+      [isAdding]="isAddingBacklogTask"
+      [tasks]="backLoggedTasks"
+      (newTaskNameEmitter)="setNewTaskName($event)"
+      (newTaskDescriptionEmitter)="setNewTaskDescription($event)"
+      (newTaskPriorityEmitter)="setNewTaskPriority($event)"
+      (submitTaskCreation)="createTask(true)"
+      (cancelTaskCreation)="cancelTask()"
+    ></app-task-list>
+    <div class="button-container">
+      <app-button
+        label="Add an item"
+        (clicked)="addBacklogTask()"
+        [isDisabled]="areButtonsDisabled"
+      ></app-button>
+    </div>
+  </div>
 </div>

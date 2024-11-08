@@ -10,3 +10,8 @@ button {
 button:hover {
   background-color: rgb(50, 138, 211);
 }
+
+button:disabled {
+  background-color: rgb(182, 182, 182);
+  cursor: not-allowed;
+}

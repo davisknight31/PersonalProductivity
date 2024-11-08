@@ -2,152 +2,141 @@ import { Component } from '@angular/core';
 import { TaskListComponent } from './task-list/task-list.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { Task } from '../../shared/interfaces/task';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../shared/interfaces/user';
+import { TaskService } from '../../core/services/task.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-to-do',
   standalone: true,
-  imports: [TaskListComponent, ButtonComponent],
+  imports: [TaskListComponent, ButtonComponent, CommonModule],
   templateUrl: './to-do.component.html',
   styleUrl: './to-do.component.scss',
 })
 export class ToDoComponent {
-  tasks: Task[] = [];
+  allTasks: Task[] = [];
+  dailyTasks: Task[] = [];
+  backLoggedTasks: Task[] = [];
+  loggedInUser!: User;
+  isAddingDailyTask: boolean = false;
+  isAddingBacklogTask: boolean = false;
+  areButtonsDisabled: boolean = false;
+  newTaskName: string = '';
+  newTaskDescription: string = '';
+  newTaskPriority: string = 'Low';
+
+  constructor(
+    private userService: UserService,
+    private taskService: TaskService
+  ) {}
 
   ngOnInit() {
-    this.tasks = [
-      {
-        completed: false,
-        name: 'Bug Ticket #4',
-        dateAdded: new Date(),
-        priority: 'Low',
-        backLogged: false,
+    //move this to login page once created
+    this.userService.login('jdoe812', 'password').subscribe({
+      next: (loggedInUser) => {
+        this.loggedInUser = loggedInUser;
+        this.getUserTasks();
       },
-      {
-        completed: true,
-        name: 'Emails',
-        dateAdded: new Date(),
-        priority: 'Moderate',
-        backLogged: false,
+      error: (error) => {
+        console.error('Login failed:', error);
       },
-      {
-        completed: false,
-        name: 'Code Review',
-        dateAdded: new Date(),
-        priority: 'High',
-        backLogged: true,
-      },
-      {
-        completed: true,
-        name: 'Feature Ticket #6',
-        dateAdded: new Date(),
-        priority: 'High',
-        backLogged: false,
-      },
-      {
-        completed: false,
-        name: 'Feature Ticket #8',
-        dateAdded: new Date(),
-        priority: 'Low',
-        backLogged: true,
-      },
-      {
-        completed: true,
-        name: 'Retro Meeting',
-        dateAdded: new Date(),
-        priority: 'High',
-        backLogged: false,
-      },
-    ];
-    console.log(this.tasks);
-    this.addTask();
+    });
+    // this.tasks = this.addTask();
   }
 
-  addTask() {
-    // if (!this.tasks) {
-    //   // Ensure tasks is defined
-    //   this.tasks = [];
-    // }
+  getUserTasks() {
+    this.allTasks = [];
+    this.dailyTasks = [];
+    this.backLoggedTasks = [];
+    this.taskService.getTasks(this.loggedInUser.id).subscribe({
+      next: (tasks) => {
+        this.allTasks = tasks;
+        this.categorizeTasks();
+      },
+      error: (error) => {
+        console.error('Failed to retrieve tasks', error);
+      },
+    });
+  }
 
-    // Define the new task
+  categorizeTasks() {
+    this.allTasks.forEach((task) => {
+      console.log(this.allTasks);
+      task.backLogged
+        ? this.backLoggedTasks.push(task)
+        : this.dailyTasks.push(task);
+    });
+  }
+
+  setNewTaskName(value: string) {
+    this.newTaskName = value;
+  }
+
+  setNewTaskDescription(value: string) {
+    this.newTaskDescription = value;
+  }
+
+  setNewTaskPriority(value: string) {
+    this.newTaskPriority = value;
+  }
+
+  addDailyTask() {
+    this.isAddingDailyTask = true;
+    this.areButtonsDisabled = true;
+  }
+
+  addBacklogTask() {
+    this.isAddingBacklogTask = true;
+    this.areButtonsDisabled = true;
+  }
+
+  createTask(forBacklog: boolean) {
+    this.isAddingDailyTask = false;
+    this.areButtonsDisabled = false;
+    this.isAddingBacklogTask = false;
+    this.areButtonsDisabled = false;
+
     const newTask: Task = {
-      completed: false,
-      name: 'New Task',
+      userId: this.userService.user.id,
+      name: this.newTaskName,
+      description: this.newTaskDescription,
+      priority: this.newTaskPriority,
       dateAdded: new Date(),
-      priority: 'Low',
-      backLogged: true,
+      completed: false,
+      backLogged: forBacklog,
     };
 
-    // Add the new task to the tasks array
-    this.tasks.push(newTask);
-    console.log('Task added:', this.tasks); // Confirm task is added
+    console.log(newTask);
+
+    //call api
+    this.taskService.createTask(newTask).subscribe({
+      next: () => {
+        this.getUserTasks();
+      },
+      error: (error) => {
+        console.error('Task creation failed:', error);
+      },
+    });
+
+    this.newTaskPriority = 'Low';
+  }
+
+  cancelTask() {
+    this.isAddingDailyTask = false;
+    this.areButtonsDisabled = false;
+    this.isAddingBacklogTask = false;
+    this.areButtonsDisabled = false;
+  }
+
+  deleteTask(value: number) {
+    this.taskService.deleteTask(value).subscribe({
+      next: () => {
+        this.getUserTasks();
+      },
+      error: (error) => {
+        console.error('Task deletion failed', error);
+      },
+    });
   }
 }
-
-// tasks: Task[] = []; // Initialize here to prevent undefined issues
-
-// ngOnInit() {
-//   this.tasks = [
-//     {
-//       completed: false,
-//       name: 'Bug Ticket #4',
-//       dateAdded: new Date(),
-//       priority: 'Low',
-//       backLogged: false,
-//     },
-//     {
-//       completed: true,
-//       name: 'Emails',
-//       dateAdded: new Date(),
-//       priority: 'Moderate',
-//       backLogged: false,
-//     },
-//     {
-//       completed: false,
-//       name: 'Code Review',
-//       dateAdded: new Date(),
-//       priority: 'High',
-//       backLogged: true,
-//     },
-//     {
-//       completed: true,
-//       name: 'Feature Ticket #6',
-//       dateAdded: new Date(),
-//       priority: 'High',
-//       backLogged: false,
-//     },
-//     {
-//       completed: false,
-//       name: 'Feature Ticket #8',
-//       dateAdded: new Date(),
-//       priority: 'Low',
-//       backLogged: true,
-//     },
-//     {
-//       completed: true,
-//       name: 'Retro Meeting',
-//       dateAdded: new Date(),
-//       priority: 'High',
-//       backLogged: false,
-//     },
-//   ];
-// }
-
-// addTask() {
-//   if (!this.tasks) {
-//     // Ensure tasks is defined
-//     this.tasks = [];
-//   }
-
-//   // Define the new task
-//   const newTask: Task = {
-//     completed: false,
-//     name: 'New Task',
-//     dateAdded: new Date(),
-//     priority: 'Low',
-//     backLogged: true,
-//   };
-
-//   // Add the new task to the tasks array
-//   this.tasks.push(newTask);
-//   console.log('Task added:', this.tasks); // Confirm task is added
-// }
