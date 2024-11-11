@@ -7,7 +7,8 @@ td {
 
 table {
   width: 100%;
-  max-width: 1000px;
+  margin-top: 8px;
+  //   max-width: 1000px;
   //   margin: auto;
 }
 
@@ -42,7 +43,7 @@ td {
 }
 
 .input {
-  width: 100px;
+  width: 100%;
 }
 
 // .completed-cell {
@@ -50,6 +51,32 @@ td {
 //   //   padding-right: 15px;
 //   width: 100px;
 // }
+
+.description-cell {
+  max-width: 250px;
+  word-wrap: break-word;
+  line-height: 25px;
+}
+
+.edit-description-cell {
+  padding-top: 6px;
+}
+
+.show-description-button {
+  background-color: transparent;
+  border: none;
+  font-size: 22px;
+  color: #0075ff;
+  color: #002855;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.description-textarea {
+  min-width: 250px;
+  width: 100%;
+}
 
 .edit-cell,
 .remove-cell {
@@ -68,4 +95,24 @@ td {
   color: rgb(42, 119, 182);
   background-color: transparent;
   cursor: pointer;
+}
+
+.priority {
+  padding: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.high-priority {
+  background-color: rgb(255, 161, 161);
+  color: rgb(177, 8, 31);
+}
+.moderate-priority {
+  background-color: rgb(255, 255, 161);
+  color: rgb(151, 136, 0);
+}
+.low-priority {
+  background-color: rgb(161, 255, 177);
+  color: rgb(6, 155, 56);
 }

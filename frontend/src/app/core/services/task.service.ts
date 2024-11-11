@@ -29,6 +29,44 @@ export class TaskService {
     );
   }
 
+  flipCompletionFlag(taskId: number) {
+    return this.http
+      .put<Task>(`${this.apiUrl}/tasks/flipcompletionflag`, taskId)
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  flipBackloggedFlag(taskId: number) {
+    return this.http
+      .put<Task>(`${this.apiUrl}/tasks/flipbackloggedflag`, taskId)
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
+  editTask(task: Task) {
+    return this.http
+      .put(`${this.apiUrl}/tasks`, {
+        id: task.id,
+        name: task.name,
+        description: task.description,
+        priority: task.priority,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
+
   deleteTask(taskId: number) {
     return this.http
       .delete(`${this.apiUrl}/tasks/${taskId}`, {

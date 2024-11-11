@@ -1,17 +1,38 @@
 <div class="container">
-  <div *ngIf="loggedInUser">{{ loggedInUser.firstName }}</div>
-  Current To DO
-  <div class="daily-todo">
+  <div *ngIf="loggedInUser" class="label current-user-label">
+    Logged in as: {{ loggedInUser.userName }}
+  </div>
+  <div class="label">Current To DO</div>
+  <!-- <select
+    [(ngModel)]="sortedBy"
+    (ngModelChange)="handleSortMethodChange($event)"
+  >
+    <option></option>
+    <option value="Low">Priority: high to low</option>
+    <option value="Moderate">Priority: low to high</option>
+    <option value="High">Date added</option>
+  </select> -->
+  <div *ngIf="dailyTasks.length > 0" class="daily-todo">
     <app-task-list
       [tasks]="dailyTasks"
       [isAdding]="isAddingDailyTask"
       (newTaskNameEmitter)="setNewTaskName($event)"
       (newTaskDescriptionEmitter)="setNewTaskDescription($event)"
       (newTaskPriorityEmitter)="setNewTaskPriority($event)"
+      (flippedStatusTasksEmitter)="setTasksToFlip($event, false)"
       (submitTaskCreation)="createTask(false)"
       (cancelTaskCreation)="cancelTask()"
       (removeTaskEmitter)="deleteTask($event)"
+      (moveTaskToOppositeListEmitter)="moveTaskToOppositeList($event)"
+      (submitEditTaskEmitter)="editTask($event)"
     ></app-task-list>
+    <div class="button-container">
+      <app-button
+        *ngIf="areThereFlippedDailyItems"
+        label="Submit task edits"
+        (click)="flipDailyTasksCompletionFlags()"
+      ></app-button>
+    </div>
     <div class="button-container">
       <app-button
         label="Add an item"
@@ -20,17 +41,28 @@
       ></app-button>
     </div>
   </div>
-  Back Log
-  <div class="task-backlog">
+  <div class="label">Back Log</div>
+  <div *ngIf="backLoggedTasks.length > 0" class="task-backlog">
     <app-task-list
       [isAdding]="isAddingBacklogTask"
       [tasks]="backLoggedTasks"
       (newTaskNameEmitter)="setNewTaskName($event)"
       (newTaskDescriptionEmitter)="setNewTaskDescription($event)"
       (newTaskPriorityEmitter)="setNewTaskPriority($event)"
+      (flippedStatusTasksEmitter)="setTasksToFlip($event, true)"
       (submitTaskCreation)="createTask(true)"
       (cancelTaskCreation)="cancelTask()"
+      (removeTaskEmitter)="deleteTask($event)"
+      (moveTaskToOppositeListEmitter)="moveTaskToOppositeList($event)"
+      (submitEditTaskEmitter)="editTask($event)"
     ></app-task-list>
+    <div class="button-container">
+      <app-button
+        *ngIf="areThereFlippedBacklogItems"
+        label="Submit task completions"
+        (click)="flipBacklogTasksCompletionFlags()"
+      ></app-button>
+    </div>
     <div class="button-container">
       <app-button
         label="Add an item"

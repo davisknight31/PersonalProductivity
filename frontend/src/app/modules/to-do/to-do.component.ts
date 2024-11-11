@@ -6,11 +6,13 @@ import { UserService } from '../../core/services/user.service';
 import { User } from '../../shared/interfaces/user';
 import { TaskService } from '../../core/services/task.service';
 import { CommonModule } from '@angular/common';
+import { forkJoin, Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-to-do',
   standalone: true,
-  imports: [TaskListComponent, ButtonComponent, CommonModule],
+  imports: [TaskListComponent, ButtonComponent, CommonModule, FormsModule],
   templateUrl: './to-do.component.html',
   styleUrl: './to-do.component.scss',
 })
@@ -22,9 +24,14 @@ export class ToDoComponent {
   isAddingDailyTask: boolean = false;
   isAddingBacklogTask: boolean = false;
   areButtonsDisabled: boolean = false;
+  areThereFlippedDailyItems: boolean = false;
+  areThereFlippedBacklogItems: boolean = false;
+  flippedDailyTasks: Task[] = [];
+  flippedBacklogTasks: Task[] = [];
   newTaskName: string = '';
   newTaskDescription: string = '';
   newTaskPriority: string = 'Low';
+  sortedBy: string = '';
 
   constructor(
     private userService: UserService,
@@ -42,7 +49,6 @@ export class ToDoComponent {
         console.error('Login failed:', error);
       },
     });
-    // this.tasks = this.addTask();
   }
 
   getUserTasks() {
@@ -81,6 +87,26 @@ export class ToDoComponent {
     this.newTaskPriority = value;
   }
 
+  setTasksToFlip(value: Task[], forBacklog: boolean) {
+    forBacklog
+      ? (this.flippedBacklogTasks = [])
+      : (this.flippedDailyTasks = []);
+
+    value.forEach((task) =>
+      task.backLogged
+        ? this.flippedBacklogTasks.push(task)
+        : this.flippedDailyTasks.push(task)
+    );
+
+    this.flippedDailyTasks.length > 0
+      ? (this.areThereFlippedDailyItems = true)
+      : (this.areThereFlippedDailyItems = false);
+
+    this.flippedBacklogTasks.length > 0
+      ? (this.areThereFlippedBacklogItems = true)
+      : (this.areThereFlippedBacklogItems = false);
+  }
+
   addDailyTask() {
     this.isAddingDailyTask = true;
     this.areButtonsDisabled = true;
@@ -89,6 +115,62 @@ export class ToDoComponent {
   addBacklogTask() {
     this.isAddingBacklogTask = true;
     this.areButtonsDisabled = true;
+  }
+
+  editTask(task: Task) {
+    this.taskService.editTask(task).subscribe({
+      next: () => {
+        this.getUserTasks();
+      },
+      error: (error) => {
+        console.error('Failed to edit task', error);
+      },
+    });
+  }
+
+  flipDailyTasksCompletionFlags() {
+    const flipCompletionFlagObservables: Observable<Task>[] =
+      this.flippedDailyTasks.map((task) =>
+        this.taskService.flipCompletionFlag(task.id!)
+      );
+
+    forkJoin(flipCompletionFlagObservables).subscribe({
+      next: () => {
+        this.getUserTasks();
+        this.flippedDailyTasks = [];
+      },
+      error: (error) => {
+        console.error('Failed to flip completion flags', error);
+      },
+    });
+  }
+
+  flipBacklogTasksCompletionFlags() {
+    const flipCompletionFlagObservables: Observable<Task>[] =
+      this.flippedBacklogTasks.map((task) =>
+        this.taskService.flipCompletionFlag(task.id!)
+      );
+
+    forkJoin(flipCompletionFlagObservables).subscribe({
+      next: () => {
+        this.getUserTasks();
+        this.flippedBacklogTasks = [];
+      },
+      error: (error) => {
+        console.error('Failed to flip completion flags', error);
+      },
+    });
+  }
+
+  moveTaskToOppositeList(task: Task) {
+    this.taskService.flipBackloggedFlag(task.id!).subscribe({
+      next: () => {
+        this.getUserTasks();
+      },
+      error: (error) => {
+        console.error('Failed to flip backlogged flag', error);
+      },
+    });
   }
 
   createTask(forBacklog: boolean) {
@@ -107,9 +189,6 @@ export class ToDoComponent {
       backLogged: forBacklog,
     };
 
-    console.log(newTask);
-
-    //call api
     this.taskService.createTask(newTask).subscribe({
       next: () => {
         this.getUserTasks();
@@ -138,5 +217,9 @@ export class ToDoComponent {
         console.error('Task deletion failed', error);
       },
     });
+  }
+
+  handleSortMethodChange(event: any) {
+    console.log('ss');
   }
 }

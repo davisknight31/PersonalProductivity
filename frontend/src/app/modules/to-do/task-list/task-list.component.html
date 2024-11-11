@@ -1,3 +1,10 @@
+Sort By:
+<select [(ngModel)]="sortedBy" (ngModelChange)="handleSortMethodChange($event)">
+  <option></option>
+  <option value="HighToLow">Priority: high to low</option>
+  <option value="LowToHigh">Priority: low to high</option>
+  <option value="DateAdded">Date added</option>
+</select>
 <table>
   <thead>
     <tr>
@@ -6,27 +13,114 @@
       <th>Description</th>
       <th>Priority</th>
       <th>Date Added</th>
-      <th colspan="2">Actions</th>
+      <th colspan="3">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let task of tasks">
+    <tr *ngFor="let task of tasks; index as i">
       <td class="checkbox-cell">
-        <input type="checkbox" [checked]="task.completed" />
+        <input
+          *ngIf="task !== taskToEdit"
+          type="checkbox"
+          [checked]="task.completed"
+          (change)="handleFlip(task)"
+        />
       </td>
-      <td>{{ task.name }}</td>
-      <td>{{ task.description }}</td>
-      <td>{{ task.priority }}</td>
-      <td>{{ formatDate(task.dateAdded) }}</td>
-      <td class="edit-cell">
-        <button class="action-button">Edit</button>
+      <td>
+        <span *ngIf="task !== taskToEdit">{{ task.name }}</span>
+        <input
+          *ngIf="task === taskToEdit"
+          class="input"
+          placeholder="Name"
+          [(ngModel)]="editedName"
+        />
       </td>
-      <td class="remove-cell">
+      <td
+        [ngClass]="
+          task === taskToEdit ? 'edit-description-cell' : 'description-cell'
+        "
+      >
+        <span
+          *ngIf="
+            task !== taskToEdit && isShowingFullDescription(task) === false
+          "
+          >{{ task.description | truncate
+          }}<button
+            class="show-description-button"
+            (click)="handleFullDescriptionClick(task)"
+            *ngIf="task.description.length > 40"
+          >
+            &#9662;
+          </button></span
+        >
+        <span
+          *ngIf="task !== taskToEdit && isShowingFullDescription(task) === true"
+          >{{ task.description
+          }}<button
+            class="show-description-button"
+            (click)="handleFullDescriptionClick(task)"
+          >
+            &#9652;
+          </button></span
+        >
+        <textarea
+          *ngIf="task === taskToEdit"
+          class="description-textarea"
+          placeholder="Description"
+          [(ngModel)]="editedDescription"
+        ></textarea>
+      </td>
+      <td>
+        <span
+          *ngIf="task !== taskToEdit"
+          [ngClass]="task.priority.toLowerCase() + '-priority priority'"
+          >{{ task.priority }}</span
+        >
+        <select *ngIf="task === taskToEdit" [(ngModel)]="editedPriority">
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+        </select>
+      </td>
+      <td *ngIf="task !== taskToEdit">{{ formatDate(task.dateAdded) }}</td>
+      <td *ngIf="task !== taskToEdit" class="edit-cell">
+        <button class="action-button" (click)="handleEditClick(task)">
+          Edit
+        </button>
+      </td>
+      <td *ngIf="task !== taskToEdit" class="move-lists-cell">
+        <button
+          *ngIf="task.backLogged"
+          class="action-button"
+          (click)="handleListSwap(task)"
+        >
+          Move to current
+        </button>
+        <button
+          *ngIf="!task.backLogged"
+          class="action-button"
+          (click)="handleListSwap(task)"
+        >
+          Move to backlog
+        </button>
+      </td>
+      <td *ngIf="task !== taskToEdit" class="remove-cell">
         <button class="action-button" (click)="removeTask(task.id!)">
           Remove
         </button>
       </td>
+      <td *ngIf="task === taskToEdit" class="submit-edit edit-cell" colspan="2">
+        <button class="action-button" (click)="handleSubmitEditClick(task)">
+          Submit
+        </button>
+      </td>
+      <td *ngIf="task === taskToEdit" class="cancel-edit edit-cell" colspan="2">
+        <button class="action-button" (click)="cancelEdit()">Cancel</button>
+      </td>
     </tr>
+    <!-- ============================================= -->
+    <!-- Add Row Starts -->
+    <!-- ============================================= -->
     <tr *ngIf="isAdding">
       <td class="checkbox-cell"></td>
       <td>
@@ -34,21 +128,21 @@
           class="input"
           placeholder="Name"
           [(ngModel)]="newTaskNameInputValue"
-          (ngModelChange)="handleTaskNameChange($event)"
+          (ngModelChange)="handleNewTaskNameChange($event)"
         />
       </td>
-      <td>
-        <input
-          class="input"
+      <td class="edit-description-cell">
+        <textarea
+          class="description-textarea"
           placeholder="Description"
           [(ngModel)]="newTaskDescriptionInputValue"
-          (ngModelChange)="handleTaskDescription($event)"
-        />
+          (ngModelChange)="handleNewTaskDescription($event)"
+        ></textarea>
       </td>
       <td>
         <select
           [(ngModel)]="newTaskSelectedPriority"
-          (ngModelChange)="handleSelectedPriorityChange($event)"
+          (ngModelChange)="handleNewSelectedPriorityChange($event)"
         >
           <option value="Low">Low</option>
           <option value="Moderate">Moderate</option>
@@ -60,7 +154,7 @@
           Confirm
         </button>
       </td>
-      <td class="edit-cell">
+      <td class="edit-cell" colspan="2">
         <button class="action-button" (click)="cancelTaskAddition()">
           Cancel
         </button>

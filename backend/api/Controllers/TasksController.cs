@@ -5,7 +5,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController: ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly MyDbContext _dbContext;
 
@@ -32,7 +32,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTask([FromBody] Models.Task task) 
+        public IActionResult CreateTask([FromBody] Models.Task task)
         {
             try
             {
@@ -59,11 +59,60 @@ namespace api.Controllers
             }
         }
 
-        //[HttpPut]
-        //public IActionResult UpdateTask([FromBody] Models.Task task)
-        //{
+        [HttpPut]
+        public IActionResult UpdateTask([FromBody] Models.Task task)
+        {
+try
+            {
+                Models.Task matchingTask = _dbContext.Tasks.First(t => t.Id == task.Id);
+                matchingTask.Name = task.Name;
+                matchingTask.Description = task.Description;
+                matchingTask.Priority = task.Priority;
 
-        //}
+                _dbContext.SaveChanges();
+                return Ok(task);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while flipping completion flag: " + ex.Message);
+            }
+        }
+
+        [HttpPut("FlipCompletionFlag")]
+        public IActionResult FlipCompletionFlag([FromBody] int taskId)
+        {
+            try
+            {
+                Models.Task task = _dbContext.Tasks.First(t => t.Id == taskId);
+                task.Completed = !task.Completed;
+                _dbContext.SaveChanges();
+                return Ok(task);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while flipping completion flag: " + ex.Message);
+            }
+        }
+
+        [HttpPut("FlipBackloggedFlag")]
+        public IActionResult FlipBackloggedFlag([FromBody] int taskId)
+        {
+            try
+            {
+                Models.Task task = _dbContext.Tasks.First(t => t.Id == taskId);
+                task.BackLogged = !task.BackLogged;
+                _dbContext.SaveChanges();
+                return Ok(task);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while flipping backlogged flag: " + ex.Message);
+            }
+        }
+
 
         [HttpDelete("{taskId}")]
         public IActionResult DeleteTask(int taskId)
