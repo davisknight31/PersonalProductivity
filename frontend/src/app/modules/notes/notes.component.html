@@ -1,1 +1,8 @@
-<p>notes works!</p>
+<div class="container">
+  <div *ngIf="notes.length > 0">
+    <app-notes-list
+      [notes]="notes"
+      (selectedNoteIdEmitter)="navigateNotesEditor($event)"
+    ></app-notes-list>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+.file-icon {
+  width: 20px;
+}
+
+.container {
+  padding-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  padding: 2px 0px 2px 0px;
+}
+table {
+  border-collapse: collapse;
+  //   border: 1px solid;
+  width: 100%;
+  font-size: 16px;
+}
+
+tr {
+  cursor: pointer;
+}
+
+tr:hover {
+  .arrow {
+    visibility: visible;
+  }
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+th {
+  text-align: left;
+}
+
+td {
+  padding: 0;
+  margin: 0;
+}
+
+.thead-row {
+  background-color: #f7f7f7 !important;
+  cursor: auto;
+}
+
+.arrow-cell {
+  text-align: right;
+}
+.arrow {
+  visibility: hidden;
+  color: #bebebe;
+  text-align: right;
+  padding: 0px 8px 0px 24px;
+}
+
+.note-icon-cell {
+  width: 26px;
+}
+
+.note-name-cell {
+  color: blue;
+  text-decoration: underline;
+}
+
+.note-date-added {
+  color: #9c9c9c;
+}

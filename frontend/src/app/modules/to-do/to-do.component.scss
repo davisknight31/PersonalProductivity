@@ -10,7 +10,7 @@
   margin-bottom: 8px;
 }
 .current-user-label {
-  margin: 10px 0px 10px 0px;
+  padding: 10px 0px 10px 0px;
 }
 
 .button-container {
@@ -29,15 +29,6 @@
   margin: auto;
   padding-bottom: 20px;
   overflow-x: auto;
-}
-
-.to-do-container {
-  //   display: flex;
-  //   flex-direction: column;
-  //   gap: 50px;
-}
-
-.daily-todo-container {
 }
 
 @media (max-width: 1200px) {

@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="note-name">
+    <span
+      class="view-note-name"
+      [class.hidden]="!hideNoteNameInput"
+      (click)="hideNoteNameInput = !hideNoteNameInput"
+      >{{ noteName }}</span
+    >
+    <span [class.hidden]="hideNoteNameInput">
+      <input class="input-note-name" type="text" [(ngModel)]="noteName" />
+      <button class="confirm-button" (click)="saveNewNoteName()">
+        Confirm
+      </button>
+    </span>
+  </div>
+  <div id="toolbar">
+    <div class="toolbar-section">
+      <button class="custom-button" (click)="save()">Save</button>
+      <button class="custom-button" (click)="export()">Export</button>
+    </div>
+    <div class="toolbar-section">
+      <select class="ql-size">
+        <option value="small"></option>
+        <option selected></option>
+        <option value="large"></option>
+        <option value="huge"></option>
+      </select>
+      <select class="ql-font"></select>
+      <select class="ql-header">
+        <option value="1"></option>
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+      </select>
+    </div>
+    <div class="toolbar-section">
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </div>
+    <div class="toolbar-section">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-code-block"></button>
+    </div>
+    <div class="toolbar-section">
+      <button class="ql-link"></button>
+      <button class="ql-image"></button>
+    </div>
+    <div class="toolbar-section">
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+      <select class="ql-align"></select>
+    </div>
+    <div class="toolbar-section">
+      <button class="ql-script" value="sub"></button>
+      <button class="ql-script" value="super"></button>
+    </div>
+    <div class="toolbar-section">
+      <button class="ql-clean" value="clean"></button>
+    </div>
+  </div>
+  <div class="editor"></div>
+</div>

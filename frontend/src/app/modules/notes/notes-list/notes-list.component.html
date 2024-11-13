@@ -1,0 +1,33 @@
+<div class="container">
+  <table>
+    <thead>
+      <tr class="thead-row">
+        <th></th>
+        <th></th>
+        <th>Name</th>
+        <th>Date Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let note of notes"
+        (click)="handleEditNotesNavigation(note.id!)"
+      >
+        <td class="arrow-cell"><span class="arrow">&#11169;</span></td>
+        <td class="note-icon-cell">
+          <img
+            class="file-icon"
+            src="../../../../assets/file_icon_lighter.png"
+            alt="image"
+          />
+        </td>
+        <td class="note-name-cell">
+          <a>{{ note.name }}</a>
+        </td>
+        <td>
+          <span class="note-date-added">{{ note.dateAdded }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

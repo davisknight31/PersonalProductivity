@@ -70,7 +70,7 @@ try
                 matchingTask.Priority = task.Priority;
 
                 _dbContext.SaveChanges();
-                return Ok(task);
+                return Ok(matchingTask);
 
             }
             catch (Exception ex)

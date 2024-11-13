@@ -1,0 +1,8 @@
+<div class="container" *ngIf="selectedNote">
+  <app-text-editor
+    [semanticHtmlContent]="selectedNote.content"
+    [noteName]="selectedNote.name"
+    (saveEmitter)="handleSaveAction($event)"
+    (saveNewNoteNameEmitter)="handleSaveNewName($event)"
+  ></app-text-editor>
+</div>

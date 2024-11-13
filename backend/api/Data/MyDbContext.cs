@@ -9,6 +9,7 @@ namespace api.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Models.Task> Tasks { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,16 @@ namespace api.Data
 
                 entity.Property(t => t.Priority).HasConversion<string>();
 
+            });
+
+            modelBuilder.Entity<Note>(entity =>
+            {
+                entity.ToTable("notes");
+                entity.Property(t => t.Id).HasColumnName("id");
+                entity.Property(t => t.UserId).HasColumnName("user_id");
+                entity.Property(t => t.Name).HasColumnName("name");
+                entity.Property(t => t.DateAdded).HasColumnName("date_added");
+                entity.Property(t => t.Content).HasColumnName("content");
             });
         }
     }
