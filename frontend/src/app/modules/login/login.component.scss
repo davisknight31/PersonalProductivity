@@ -1,0 +1,51 @@
+.container {
+  margin: auto;
+  width: 75%;
+  max-width: 1000px;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: auto;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.label {
+  width: 80px;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  background-color: rgb(42, 119, 182);
+  color: white;
+  font-size: 14px;
+  padding: 6px;
+}
+
+button:hover {
+  border: none;
+  cursor: pointer;
+  background-color: rgb(50, 138, 211);
+}
+
+@media (max-width: 1200px) {
+  .container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1050px) {
+  .container {
+    width: 95%;
+  }
+}

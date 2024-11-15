@@ -1,33 +1,101 @@
 <div class="container">
+  <div class="search-container">
+    Search:
+    <input
+      class="search-input"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="filterSearch(searchTerm)"
+    />
+  </div>
   <table>
     <thead>
       <tr class="thead-row">
         <th></th>
         <th></th>
-        <th>Name</th>
-        <th>Date Created</th>
+        <th class="name-header">Name</th>
+        <th class="date-header">Date Created</th>
+        <th class="delete-header">Delete</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let note of notes"
-        (click)="handleEditNotesNavigation(note.id!)"
-      >
-        <td class="arrow-cell"><span class="arrow">&#11169;</span></td>
-        <td class="note-icon-cell">
+      <tr *ngFor="let note of filteredNotes">
+        <td class="arrow-cell" (click)="handleEditNotesNavigation(note.id!)">
+          <span class="arrow">&#11169;</span>
+        </td>
+        <td
+          class="note-icon-cell"
+          (click)="handleEditNotesNavigation(note.id!)"
+        >
           <img
             class="file-icon"
             src="../../../../assets/file_icon_lighter.png"
             alt="image"
           />
         </td>
-        <td class="note-name-cell">
-          <a>{{ note.name }}</a>
+        <td
+          class="note-name-cell"
+          (click)="handleEditNotesNavigation(note.id!)"
+        >
+          <a>{{ note.name | truncate }}</a>
         </td>
-        <td>
-          <span class="note-date-added">{{ note.dateAdded }}</span>
+        <td class="date-cell" (click)="handleEditNotesNavigation(note.id!)">
+          <span class="note-date-added">{{
+            formatDate(note.dateAdded.toString())
+          }}</span>
+        </td>
+        <td class="delete-cell">
+          <span *ngIf="noteToDelete !== note">
+            <img
+              class="trash-icon"
+              src="../../../../assets/trashcan_icon.png"
+              (click)="handleDeleteNoteClick(note)"
+            />
+          </span>
+          <span *ngIf="deletingNote && noteToDelete === note"
+            ><button
+              (click)="confirmDeleteNoteClick()"
+              class="confirm-button button"
+            >
+              Confirm?</button
+            ><button
+              (click)="cancelDeleteNoteClick()"
+              class="cancel-button button"
+            >
+              Cancel
+            </button></span
+          >
         </td>
       </tr>
+      <tr *ngIf="creating">
+        <td></td>
+        <td></td>
+        <td class="input-cell">
+          <input
+            class="name-input"
+            placeholder="Name"
+            [value]="newNoteName"
+            [(ngModel)]="newNoteName"
+          />
+        </td>
+        <td class="actions-cell">
+          <button class="confirm-button button" (click)="confirmNewNoteClick()">
+            Confirm</button
+          ><button class="cancel-button button" (click)="cancelNewNoteClick()">
+            Cancel
+          </button>
+        </td>
+        <td></td>
+      </tr>
     </tbody>
+    <!-- <tbody *ngIf="filteredNotes.length <= 0">
+      <tr>
+        <td class="arrow-cell"><span class="arrow">&#11169;</span></td>
+        <td class="note-icon-cell"></td>
+        <td class="no-results-cell">No Results</td>
+        <td>
+          <span class="note-date-added"></span>
+        </td>
+      </tr>
+    </tbody> -->
   </table>
 </div>

@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NotesComponent {
   notes: Note[] = [];
+  creating: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -23,18 +24,13 @@ export class NotesComponent {
   ) {}
 
   ngOnInit() {
-    this.userService.login('jdoe812', 'password').subscribe({
-      next: (loggedInUser) => {
-        this.getUserNotes();
-      },
-      error: (error) => {
-        console.error('Login failed:', error);
-      },
-    });
+    this.getUserNotes();
   }
 
   getUserNotes() {
-    this.noteService.getNotes(this.userService.user.id).subscribe({
+    this.notes = [];
+    console.log(this.userService.user!.id);
+    this.noteService.getNotes(this.userService.user!.id).subscribe({
       next: (notes) => {
         this.notes = notes;
       },
@@ -44,5 +40,50 @@ export class NotesComponent {
 
   navigateNotesEditor(noteId: number) {
     this.router.navigate(['/edit-notes', noteId]);
+  }
+
+  createNote() {
+    console.log('s');
+    this.creating = true;
+  }
+
+  submitCreation(newNoteName: string) {
+    this.creating = false;
+    // console.log(this.userService.user!.id);
+    const newNote: Note = {
+      userId: this.userService.user!.id,
+      name: newNoteName,
+      dateAdded: new Date(),
+      content: '',
+    };
+
+    this.noteService.createNote(newNote).subscribe({
+      next: (note) => {
+        this.refreshNotes();
+        console.log(note);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
+  cancelCreation(value: boolean) {
+    this.creating = value;
+  }
+
+  deleteNote(noteId: number) {
+    this.noteService.deleteNote(noteId).subscribe({
+      next: () => {
+        this.refreshNotes();
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
+  refreshNotes() {
+    this.getUserNotes();
   }
 }

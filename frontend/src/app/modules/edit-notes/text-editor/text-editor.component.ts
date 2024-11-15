@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-text-editor',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './text-editor.component.html',
   styleUrl: './text-editor.component.scss',
 })
@@ -19,6 +19,7 @@ export class TextEditorComponent {
 
   quill!: Quill;
   hideNoteNameInput: boolean = true;
+  showSavedText: boolean = false;
 
   // toolbarOptions = [
   //   [{ size: ['small', false, 'large', 'huge'] }],
@@ -55,7 +56,11 @@ export class TextEditorComponent {
   }
 
   save() {
+    this.showSavedText = true;
     this.saveEmitter.emit(this.quill.getSemanticHTML());
+    setTimeout(() => {
+      this.showSavedText = false;
+    }, 2000);
   }
 
   export() {

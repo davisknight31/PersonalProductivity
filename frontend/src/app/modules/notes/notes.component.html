@@ -1,8 +1,15 @@
 <div class="container">
-  <div *ngIf="notes.length > 0">
+  <div>
     <app-notes-list
       [notes]="notes"
+      [creating]="creating"
       (selectedNoteIdEmitter)="navigateNotesEditor($event)"
+      (deleteNoteEmitter)="deleteNote($event)"
+      (cancelNoteCreationEmitter)="cancelCreation($event)"
+      (submitNoteCreationEmitter)="submitCreation($event)"
     ></app-notes-list>
+  </div>
+  <div class="new-note-container">
+    <div class="new-note" (click)="createNote()">+ New Note</div>
   </div>
 </div>

@@ -27,7 +27,7 @@ Sort By:
         />
       </td>
       <td>
-        <span *ngIf="task !== taskToEdit">{{ task.name }}</span>
+        <span *ngIf="task !== taskToEdit">{{ task.name | truncate }}</span>
         <input
           *ngIf="task === taskToEdit"
           class="input"
@@ -158,6 +158,18 @@ Sort By:
         <button class="action-button" (click)="cancelTaskAddition()">
           Cancel
         </button>
+      </td>
+    </tr>
+    <!-- ============================================= -->
+    <!-- Add Row Starts -->
+    <!-- ============================================= -->
+    <tr *ngIf="tasks.length <= 0">
+      <td
+        class="no-items-cell"
+        colspan="7
+      "
+      >
+        No items
       </td>
     </tr>
   </tbody>

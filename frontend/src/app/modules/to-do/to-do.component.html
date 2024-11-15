@@ -12,7 +12,7 @@
     <option value="Moderate">Priority: low to high</option>
     <option value="High">Date added</option>
   </select> -->
-  <div *ngIf="dailyTasks.length > 0" class="daily-todo">
+  <div class="daily-todo">
     <app-task-list
       [tasks]="dailyTasks"
       [isAdding]="isAddingDailyTask"
@@ -42,7 +42,7 @@
     </div>
   </div>
   <div class="label">Back Log</div>
-  <div *ngIf="backLoggedTasks.length > 0" class="task-backlog">
+  <div class="task-backlog">
     <app-task-list
       [isAdding]="isAddingBacklogTask"
       [tasks]="backLoggedTasks"

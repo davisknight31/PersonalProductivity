@@ -2,8 +2,19 @@
   width: 20px;
 }
 
+.trash-icon {
+  width: 20px;
+}
+
 .container {
   padding-top: 20px;
+}
+
+.search-container {
+  margin-bottom: 6px;
+}
+.search-input {
+  height: 24px;
 }
 
 ul {
@@ -42,6 +53,7 @@ tr:nth-child(even) {
 
 th {
   text-align: left;
+  text-wrap: nowrap;
 }
 
 td {
@@ -54,8 +66,21 @@ td {
   cursor: auto;
 }
 
+.name-header {
+  width: 150px;
+}
+
+.date-header {
+  padding-right: 20px;
+}
+
+.delete-header {
+  width: 150px;
+}
+
 .arrow-cell {
   text-align: right;
+  width: 100px;
 }
 .arrow {
   visibility: hidden;
@@ -71,8 +96,49 @@ td {
 .note-name-cell {
   color: blue;
   text-decoration: underline;
+  padding-right: 10px;
 }
 
 .note-date-added {
   color: #9c9c9c;
+}
+
+.button {
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  padding: 6px;
+  margin: 6px 6px 6px 0px;
+}
+
+.button:hover {
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-button {
+  background-color: rgb(42, 119, 182);
+  margin-right: 6px;
+}
+
+.confirm-button:hover {
+  background-color: rgb(50, 138, 211);
+}
+
+.cancel-button {
+  background-color: rgb(182, 42, 42);
+}
+
+.cancel-button:hover {
+  background-color: rgb(211, 50, 50);
+}
+
+.name-input {
+  height: 24px;
+  width: 100%;
+}
+
+.actions-cell {
+  padding-left: 10px;
 }

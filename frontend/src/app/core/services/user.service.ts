@@ -8,12 +8,13 @@ import { tap } from 'rxjs';
 })
 export class UserService {
   private apiUrl = 'http://localhost:5032/api';
-  user: User = {
-    id: 0,
-    userName: 'default',
-    firstName: 'default',
-    lastName: 'default',
-  };
+  // user: User = {
+  //   id: 0,
+  //   userName: 'default',
+  //   firstName: 'default',
+  //   lastName: 'default',
+  // };
+  user: User | undefined;
 
   constructor(private http: HttpClient) {}
 

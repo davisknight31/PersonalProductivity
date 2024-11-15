@@ -1,12 +1,31 @@
 .container {
   margin: auto;
-  padding-top: 30px;
-  width: 90%;
+  padding-top: 20px;
+  // width: 90%;
 }
 
-.note-name {
+.note-header {
+  display: flex;
   padding-bottom: 10px;
   font-size: 18px;
+}
+
+.saved-text {
+  color: #bcbcbc;
+  opacity: 0%;
+  padding-left: 15px;
+  animation: fade-out ease-out 2s 0s 1;
+  animation: name duration timing-function delay iteration-count direction
+    fill-mode;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 100%;
+  }
+  to {
+    opacity: 0%;
+  }
 }
 
 .textarea-container {

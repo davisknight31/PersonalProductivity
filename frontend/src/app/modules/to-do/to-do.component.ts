@@ -40,15 +40,18 @@ export class ToDoComponent {
 
   ngOnInit() {
     //move this to login page once created
-    this.userService.login('jdoe812', 'password').subscribe({
-      next: (loggedInUser) => {
-        this.loggedInUser = loggedInUser;
-        this.getUserTasks();
-      },
-      error: (error) => {
-        console.error('Login failed:', error);
-      },
-    });
+    this.loggedInUser = this.userService.user!;
+    console.log(this.loggedInUser);
+    this.getUserTasks();
+    // this.userService.login('jdoe812', 'password').subscribe({
+    //   next: (loggedInUser) => {
+    //     this.loggedInUser = loggedInUser;
+
+    //   },
+    //   error: (error) => {
+    //     console.error('Login failed:', error);
+    //   },
+    // });
   }
 
   getUserTasks() {
@@ -57,6 +60,7 @@ export class ToDoComponent {
     this.backLoggedTasks = [];
     this.taskService.getTasks(this.loggedInUser.id).subscribe({
       next: (tasks) => {
+        console.log(tasks);
         this.allTasks = tasks;
         this.categorizeTasks();
       },
@@ -180,7 +184,7 @@ export class ToDoComponent {
     this.areButtonsDisabled = false;
 
     const newTask: Task = {
-      userId: this.userService.user.id,
+      userId: this.userService.user!.id,
       name: this.newTaskName,
       description: this.newTaskDescription,
       priority: this.newTaskPriority,

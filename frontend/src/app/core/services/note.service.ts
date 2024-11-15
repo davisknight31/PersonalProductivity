@@ -37,4 +37,17 @@ export class NoteService {
       })
     );
   }
+
+  deleteNote(noteId: number) {
+    return this.http
+      .delete(`${this.apiUrl}/notes/${noteId}`, {
+        responseType: 'text',
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
 }

@@ -15,11 +15,11 @@ namespace api.Controllers
         {
             _dbContext = dbContext;
         }
-        
+
         [HttpGet("{userId}")]
         public IActionResult GetNotes(int userId)
         {
-           try
+            try
             {
                 List<Note> userNotes = _dbContext.Notes.Where(n => n.UserId == userId).ToList();
 
@@ -60,7 +60,7 @@ namespace api.Controllers
             try
             {
                 Note noteToUpdate = _dbContext.Notes.First(n => n.Id == note.Id);
-                
+
                 noteToUpdate.Name = note.Name;
                 noteToUpdate.Content = note.Content;
                 _dbContext.SaveChanges();
@@ -70,6 +70,22 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while creating note: " + ex.Message);
+            }
+        }
+
+        [HttpDelete("{noteId}")]
+        public IActionResult DeleteNote(int noteId)
+        {
+            try
+            {
+                Note noteToDelete = _dbContext.Notes.First(n => n.Id == noteId);
+                _dbContext.Remove(noteToDelete);
+                _dbContext.SaveChanges();
+                return Ok("Successfully Deleted");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occured while creating note: " + ex.Message);
             }
         }
     }

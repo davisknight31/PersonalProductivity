@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="note-name">
+  <div class="note-header">
     <span
       class="view-note-name"
       [class.hidden]="!hideNoteNameInput"
@@ -12,6 +12,7 @@
         Confirm
       </button>
     </span>
+    <div *ngIf="showSavedText" class="saved-text">Saved</div>
   </div>
   <div id="toolbar">
     <div class="toolbar-section">
